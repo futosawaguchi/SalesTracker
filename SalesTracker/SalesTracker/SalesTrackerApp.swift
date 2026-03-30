@@ -12,7 +12,9 @@ import SwiftData
 struct SalesTrackerApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            SalesRecord.self,
+            SNSRecord.self,
+            ReviewRecord.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
