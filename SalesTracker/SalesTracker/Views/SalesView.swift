@@ -74,21 +74,52 @@ struct SalesView: View {
                 .padding(.horizontal)
 
                 if showChart {
-                    // グラフ表示
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("\(selectedYear)年 月別売上")
-                            .font(.headline)
-                            .padding(.horizontal)
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 16) {
 
-                        Chart(monthlyChartData, id: \.month) { data in
-                            BarMark(
-                                x: .value("月", "\(data.month)月"),
-                                y: .value("売上", data.total)
-                            )
-                            .foregroundStyle(.green)
+                            // 週別グラフ
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("\(selectedYear)年\(selectedMonth)月 週別売上")
+                                    .font(.headline)
+                                    .padding(.horizontal)
+
+                                if filteredRecords.isEmpty {
+                                    Text("この月のデータがありません")
+                                        .foregroundStyle(.secondary)
+                                        .padding()
+                                } else {
+                                    Chart(filteredRecords.sorted { $0.week < $1.week }) { record in
+                                        BarMark(
+                                            x: .value("週", "第\(record.week)週"),
+                                            y: .value("売上", record.amount)
+                                        )
+                                        .foregroundStyle(.blue)
+                                    }
+                                    .frame(height: 200)
+                                    .padding(.horizontal)
+                                }
+                            }
+
+                            Divider()
+
+                            // 月別グラフ
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("\(selectedYear)年 月別売上")
+                                    .font(.headline)
+                                    .padding(.horizontal)
+
+                                Chart(monthlyChartData, id: \.month) { data in
+                                    BarMark(
+                                        x: .value("月", "\(data.month)月"),
+                                        y: .value("売上", data.total)
+                                    )
+                                    .foregroundStyle(.green)
+                                }
+                                .frame(height: 200)
+                                .padding(.horizontal)
+                            }
                         }
-                        .frame(height: 250)
-                        .padding()
+                        .padding(.vertical)
                     }
                 } else {
                     // 月合計カード
