@@ -11,14 +11,14 @@ import SwiftData
 @Model
 final class ReviewRecord {
     var id: UUID
-    var count: Int       // 口コミ数
-    var recordedAt: Date // 記録した日時
-    var memo: String     // メモ（任意）
+    var count: Int
+    var recordedAt: Date
+    var memo: String
 
-    init(count: Int, memo: String = "") {
+    init(count: Int, memo: String = "", recordedAt: Date = Date()) {
         self.id = UUID()
         self.count = count
-        self.recordedAt = Date()
+        self.recordedAt = recordedAt
         self.memo = memo
     }
 }
