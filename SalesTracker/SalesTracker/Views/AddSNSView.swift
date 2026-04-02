@@ -67,11 +67,6 @@ struct AddSNSView: View {
         let startOfDay = calendar.startOfDay(for: Date())
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
         
-        // 今日すでに記録があるか確認してコンテキストから取得
-        let existingRecord = modelContext.registeredModel(
-            for: SNSRecord.self
-        )
-        
         // SwiftDataで今日のレコードを検索
         let descriptor = FetchDescriptor<SNSRecord>(
             predicate: #Predicate { record in
