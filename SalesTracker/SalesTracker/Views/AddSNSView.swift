@@ -12,6 +12,7 @@ struct AddSNSView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @State private var selectedDate = Date()
     @State private var followers = ""
     @State private var following = ""
     @State private var memo = ""
@@ -19,6 +20,15 @@ struct AddSNSView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section("日付") {
+                    DatePicker(
+                        "記録日",
+                        selection: $selectedDate,
+                        displayedComponents: .date
+                    )
+                    .environment(\.locale, Locale(identifier: "ja_JP"))
+                }
+
                 Section("フォロワー数") {
                     HStack {
                         Text("フォロワー")
@@ -61,32 +71,31 @@ struct AddSNSView: View {
     private func saveRecord() {
         guard let followersValue = Int(followers),
               let followingValue = Int(following) else { return }
-        
-        // 今日の日付の開始・終了を取得
+
         let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: Date())
+        let startOfDay = calendar.startOfDay(for: selectedDate)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-        
-        // SwiftDataで今日のレコードを検索
+
         let descriptor = FetchDescriptor<SNSRecord>(
             predicate: #Predicate { record in
                 record.recordedAt >= startOfDay && record.recordedAt < endOfDay
             }
         )
-        
-        if let todayRecords = try? modelContext.fetch(descriptor),
-           let existing = todayRecords.first {
+
+        if let existingRecords = try? modelContext.fetch(descriptor),
+           let existing = existingRecords.first {
             // 既存レコードを上書き
             existing.followers = followersValue
             existing.following = followingValue
             existing.memo = memo
-            existing.recordedAt = Date()
+            existing.recordedAt = startOfDay
         } else {
-            // 新規作成
+            // 新規作成（selectedDateを渡す）
             let record = SNSRecord(
                 followers: followersValue,
                 following: followingValue,
-                memo: memo
+                memo: memo,
+                recordedAt: startOfDay
             )
             modelContext.insert(record)
         }

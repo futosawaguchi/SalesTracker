@@ -11,16 +11,16 @@ import SwiftData
 @Model
 final class SNSRecord {
     var id: UUID
-    var followers: Int   // フォロワー数
-    var following: Int   // フォロー数
-    var recordedAt: Date // 記録した日時
-    var memo: String     // メモ（任意）
+    var followers: Int
+    var following: Int
+    var recordedAt: Date
+    var memo: String
 
-    init(followers: Int, following: Int, memo: String = "") {
+    init(followers: Int, following: Int, memo: String = "", recordedAt: Date = Date()) {
         self.id = UUID()
         self.followers = followers
         self.following = following
-        self.recordedAt = Date()
+        self.recordedAt = recordedAt
         self.memo = memo
     }
 }
