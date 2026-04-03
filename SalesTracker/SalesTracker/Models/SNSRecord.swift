@@ -3,7 +3,7 @@
 //  SalesTracker
 //
 //  Created by 澤口楓斗 on 2026/03/30.
-//
+//update
 
 import Foundation
 import SwiftData
